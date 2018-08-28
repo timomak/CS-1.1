@@ -1,8 +1,11 @@
+# TODO: Get the Update and mark completed working! Add colored text in terminal.
 checklist = list()
+completed = list()
 running = True
 
 def create(item):
     checklist.append(item)
+    completed.append(0)
 
 def read(index):
     item = checklist[index]
@@ -12,6 +15,7 @@ def read(index):
 def update(index, item):
     if isinstance(index, int):
         checklist[index] = item
+        completed[index] = 0
     else:
         print("Error: Invalid input.")
         return
@@ -20,6 +24,7 @@ def update(index, item):
 def destroy(index):
     if isinstance(index, int):
         checklist.pop(index)
+        complted.pop(index)
     else:
         print("Error: Invalid input.")
         return
@@ -27,12 +32,17 @@ def destroy(index):
 def list_all_items():
     index = 0
     for list_item in checklist:
-
-        print("[ ] " + "{} {} ".format(index, list_item))
+        if completed[index] == 0:
+            print("[ ] " + "{} {} ".format(index, list_item))
+        elif completed[index] == 1:
+            print("[V] " + "{} {} ".format(index, list_item))
         index += 1
 def mark_completed(index):
-    checklist[index] = "[V] " + checklist[index]
-    print(checklist[index])
+    complted.pop(index)
+    completed.insert(index, 1)
+
+
+    print(completed[index])
 
 def user_input(prompt):
     # the input function will display a message in the terminal
@@ -66,8 +76,8 @@ def select(function_code):
         update(item_index, new_item)
 
     elif function_code == "C":
-        item_index = user_numInput("Completed item: ")
-        mark_completed(item_index)
+        items_index = user_numInput("Completed item: ")
+        mark_completed(items_index)
     # Print all items
     elif function_code == "P":
         list_all_items()
@@ -87,6 +97,7 @@ while running == True:
 #     create("purple sox")
 #     create("red cloak")
 #     list_all_items()
+#     print (completed)
 #     #
 #     # print(read(0))
 #     # print(read(1))
@@ -102,13 +113,13 @@ while running == True:
 #     # Call your new function with the appropriate value
 #     select("C")
 #     # View the results
-#     list_all_items()
+#     # list_all_items()
 #     # Call function with new value
-#     select("R")
-#     # View results
-#     list_all_items()
+#     # select("R")
+#     # # View results
+#     # list_all_items()
 #     # Continue until all code is run
-#     select("P")
-#     list_all_items()
-#     select("Q")
+#     # select("P")
+#     # list_all_items()
+#     # select("Q")
 # test()
