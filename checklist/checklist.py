@@ -1,4 +1,5 @@
 checklist = list()
+# Array to store all the tasks
 
 def create(item):
     checklist.append(item)
@@ -26,6 +27,7 @@ def mark_completed(index):
 
 def select(function_code):
     if function_code == "A":
+        print ("Select works ")
         new_item = input("Add to list:")
         if type(new_item) is str:
             create(new_item)
@@ -71,7 +73,7 @@ running = True
 while running == True:
     selection = input("A to add to list\nR to Remove from list\nU to update item\nC to complete item\nP to display list\nQ to exit.\nInput: ")
     print("Selection: ", selection)
-    if selection == "Q" or selection == "q":
+    if selection == "Q" or "q":
         running = False
     else:
         select(selection.upper())
@@ -80,7 +82,7 @@ def test():
     # Your testing code here
     # ...
     # Call your new function with the appropriate value
-    select("C")
+    select("A")
     # View the results
     list_all_items()
     # Call function with new value
