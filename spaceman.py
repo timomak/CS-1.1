@@ -1,7 +1,7 @@
 import random
 
 # Possible mystery words
-wordsList = ["spacemans", "new", "toonew"]
+wordsList = ["scorpion","shoes","baked","house","salamander","slippers","scooper","alphabet","falaffel","trinity"]
 # Pick a random from the array.
 currentWord = random.choice(wordsList)
 
@@ -20,8 +20,24 @@ numberOfWrongGuesses = 0
 
 gameOver = False
 
-alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p","q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+stickMan = "   💫"
 
+def drawStickMan():
+    global stickMan
+    if numberOfWrongGuesses == 1:
+        print(stickMan)
+    elif numberOfWrongGuesses == 2:
+        stickMan = stickMan + "\n   🚀"
+        print(stickMan)
+    elif numberOfWrongGuesses == 3:
+        stickMan = stickMan + "\n   👨🏻‍🚀"
+        print(stickMan)
+    elif numberOfWrongGuesses == 4:
+        stickMan = stickMan + "\n   👐"
+        print(stickMan)
+    elif numberOfWrongGuesses == 5:
+        stickMan = stickMan + "\n   👣"
+        print(stickMan)
 
 # Function to count and make a dash for each letter in word
 def hiddenWord():
@@ -29,7 +45,6 @@ def hiddenWord():
     for letters in currentWord:
         notSoMysteryWord.append(letters)
         mysteryWord.append("_")
-        print(mysteryWord)
         # Underscore the not yet guessed letters from the mystery word
         loadSentence = loadSentence + "_ "
     print(loadSentence)
@@ -47,11 +62,13 @@ def getLetter():
         return
 
     newLetter = newLetter.lower()
-    if newLetter in alphabet:
+    if newLetter.isalpha():
         # Check if the word exists already, append otherwise
         checkIfLetterExists(newLetter)
+        # print("Your guesses: ", guesses)
     else:
         print("Please try again with a single letter.")
+
 
 
 # Function to keep track of all the wordsList
@@ -79,21 +96,21 @@ def checkIfTheGuessIsCorrect(guess:str):
             print("The guess was correct!")
             mysteryWord[index] = guess
             found = True
-            numberOfCorrectTries = numberOfCorrectTries + 1
+            numberOfCorrectTries += 1
         guesses.append(guess)
         index = index + 1
-        print(mysteryWord)
+    print(mysteryWord)
 
     if found == False:
-        numberOfWrongGuesses = numberOfWrongGuesses + 1
+        numberOfWrongGuesses += 1
+        # Function to print out the new stickman
+        drawStickMan()
         print("Guessed Wrong number: ", numberOfWrongGuesses)
-        # TODO: Show number of incorrect tries
-        # TODO: Check if game won
 
 
 while numberOfCorrectTries != len(notSoMysteryWord) and gameOver == False:
     getLetter()
-    if numberOfWrongGuesses == 5:
+    if numberOfWrongGuesses == 7:
         gameOver = True
         print("You Lost!")
 
