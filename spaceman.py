@@ -56,6 +56,10 @@ hiddenWord()
 def getLetter():
     newLetter = input("New letter: ")
 
+    # Check if nil
+    if newLetter == None:
+        print("Can't be null")
+        return
     # Check if it's a single letter.
     if len(newLetter) > 1:
         print("Type only one letter.")
@@ -108,7 +112,7 @@ def checkIfTheGuessIsCorrect(guess:str):
         print("Guessed Wrong number: ", numberOfWrongGuesses)
 
 
-while numberOfCorrectTries != len(notSoMysteryWord) and gameOver == False:
+while numberOfCorrectTries != len(notSoMysteryWord) and not gameOver:
     getLetter()
     if numberOfWrongGuesses == 7:
         gameOver = True
