@@ -1,4 +1,5 @@
 from random import randint
+import random
 
 class Hero:
     def __init__(self, name, starting_health=100):
@@ -15,11 +16,23 @@ class Hero:
         self.current_health = starting_health
         self.abilities = list()
 
+        self.armors = list()
+        self.deaths = 0
+        self.kills = 0
+        self.defence = 0
+
 
     def add_ability(self, ability):
         ''' Add ability to abilities list '''
         self.abilities.append(ability)
-        # print("abilities: ", self.abilities)
+        pass
+
+    def add_armor(self, armor):
+        ''' Add ability to abilities list '''
+        self.armors.append(armor)
+        self.defence = 0
+        for armor in self.armors:
+            self.defence += armor.block()
         pass
 
     def attack(self):
@@ -42,7 +55,16 @@ class Hero:
         This method should update self.current_health
         with the damage that is passed in.
         '''
-        self.current_health -= damage
+        if self.defence > 0:
+            print("{} has armor".format(self.name))
+            self.defence -= damage
+            if self.defence < 0:
+                print("Pierced throught block. Current defence: ", self.defence)
+                pierceDamage = self.defence * -1
+                self.current_health -= pierceDamage
+        else:
+            self.current_health -= damage
+            print("{} has no armor".format(self.name))
         pass
 
     def is_alive(self):
@@ -68,10 +90,15 @@ class Hero:
           print("{}'s health is: ".format(opponent.name), opponent.current_health)
 
         if self.is_alive() == False:
+            self.deaths += 1
+            opponent.kills += 1
             print("{} died".format(self.name))
 
+
         if opponent.is_alive() == False:
-            print("{} died".format(opponent.name))
+            opponent.deaths += 1
+            self.kills += 1
+            print("{} died. He has {} deaths.".format(opponent.name, opponent.deaths))
 
 
 class Ability:
@@ -130,35 +157,61 @@ class Team:
             print("team member: ",hero.name)
         pass
 
+    def attack(self, other_team):
+        '''
+        This function should randomly select a living hero from each team and have them fight until one or both teams have no surviving heroes.
+
+        Hint: Use the fight method in the Hero class.
+        '''
+        randomTeamHero = random.choice(self.heroes)
+        randomEnemyTeamHero = random.choice(other_team.heroes)
+        print("{} against {}".format(randomTeamHero.name, randomEnemyTeamHero.name))
+
+        pass
+
+    def revive_heroes(self, health=100):
+        '''
+        This method should reset all heroes health to their
+        original starting value.
+        '''
+        pass
+
+    def stats(self):
+        '''
+        This method should print the ratio of kills/deaths for each member of the team to the screen.
+
+        This data must be output to the console.
+        '''
+        pass
+
+class Armor:
+    def __init__(self, name, max_block):
+        '''Instantiate name and defense strength.'''
+        self.name = name
+        self.max_block = max_block
+
+    def block(self):
+        '''
+        Return a random value between 0 and the
+        initialized max_block strength.
+        '''
+        defence = randint(0, self.max_block)
+        return defence
+
 if __name__ == "__main__":
-
-    # hero = Hero("Wonder Woman")
-    # ability = Ability("Divine Speed", 20)
-    # hero.add_ability(ability)
-    # new_ability = Ability("Super Human Strength", 30)
-    #
-    # hero.add_ability(new_ability)
-    #
-    #
-    # hero2 = Hero("Jodie Foster")
-    #
-    # axe = Weapon("axe", 80)
-    # hero2.add_ability(axe)
-    #
-    # ability2 = Ability("Science", 40)
-    # hero2.add_ability(ability2)
-    #
-    #
-    #
-    # hero.fight(hero2)
-
     batman = Hero("Batman")
+    # batsuit = Armor("Bat Suit", 1)
+    # batman.add_armor(batsuit)
+
+
+
     superman = Hero("Superman")
-    justiceLeague = Team("Justice League")
+    # superStreanght = Ability("Super Streanght", 100)
+    # superman.add_ability(superStreanght)
+
+    justiceLeague = Team("League")
+    evilLeague = Team("Evil League")
 
     justiceLeague.add_hero(batman)
-    justiceLeague.add_hero(superman)
-
-    justiceLeague.view_all_heroes()
-    justiceLeague.remove_hero(superman)
-    justiceLeague.view_all_heroes()
+    evilLeague.add_hero(superman)
+    justiceLeague.attack(evilLeague)
