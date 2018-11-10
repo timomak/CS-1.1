@@ -32,7 +32,8 @@ class Hero:
         '''
         damage = 0
         for ability in self.abilities:
-            damage += ability.attackAbility()
+            damage += ability.attack()
+            print("{} is adding {} damage".format(self.name, damage))
         print("{} is attacking with attack power of {}".format(self.name, damage))
         return damage
 
@@ -82,25 +83,82 @@ class Ability:
         self.name = name
         self.attackStrenght = attackStrenght
 
-    def attackAbility(self):
+    def attack(self):
         '''
         Return a random attack value
         between 0 and attackStrenght.
         '''
         damage = randint(0, self.attackStrenght)
-        print(damage)
+        print("ability attack damage: ",damage, " by ", self.name)
         return damage
 
+class Weapon(Ability):
+    def attack(self):
+        """
+        This method should should return a random value
+        between one half to the full attack power of the weapon.
+        Hint: The attack power is inherited.
+        """
+        damage = randint((self.attackStrenght / 2), self.attackStrenght)
+        print("Weapon damage",damage)
+        return damage
+
+class Team:
+    def __init__(self, team_name):
+        '''Instantiate resources.'''
+        self.name = team_name
+        self.heroes = list()
+
+    def add_hero(self, Hero):
+        '''Add Hero object to heroes list.'''
+        self.heroes.append(Hero)
+        pass
+
+    def remove_hero(self, name):
+        '''
+        Remove hero from heroes list.
+        If Hero isn't found return 0.
+        '''
+        for hero in self.heroes:
+            if hero == name:
+                self.heroes.remove(hero)
+        pass
+
+    def view_all_heroes(self):
+        '''Print out all heroes to the console.'''
+        for hero in self.heroes:
+            print("team member: ",hero.name)
+        pass
 
 if __name__ == "__main__":
-    hero = Hero("Wonder Woman",1000)
-    ability = Ability("Divine Speed", 20)
-    hero.add_ability(ability)
-    new_ability = Ability("Super Human Strength", 30)
-    hero.add_ability(new_ability)
 
+    # hero = Hero("Wonder Woman")
+    # ability = Ability("Divine Speed", 20)
+    # hero.add_ability(ability)
+    # new_ability = Ability("Super Human Strength", 30)
+    #
+    # hero.add_ability(new_ability)
+    #
+    #
+    # hero2 = Hero("Jodie Foster")
+    #
+    # axe = Weapon("axe", 80)
+    # hero2.add_ability(axe)
+    #
+    # ability2 = Ability("Science", 40)
+    # hero2.add_ability(ability2)
+    #
+    #
+    #
+    # hero.fight(hero2)
 
-    hero2 = Hero("Jodie Foster", 1000)
-    ability2 = Ability("Science", 800)
-    hero2.add_ability(ability2)
-    hero.fight(hero2)
+    batman = Hero("Batman")
+    superman = Hero("Superman")
+    justiceLeague = Team("Justice League")
+
+    justiceLeague.add_hero(batman)
+    justiceLeague.add_hero(superman)
+
+    justiceLeague.view_all_heroes()
+    justiceLeague.remove_hero(superman)
+    justiceLeague.view_all_heroes()
