@@ -26,6 +26,13 @@ class Hero:
         ''' Add ability to abilities list '''
         self.abilities.append(ability)
         pass
+    def add_weapon(self, weapon):
+        '''
+        This method will append the weapon object passed in as an argument to the list of abilities that already exists -- self.abilities.
+
+        This means that self.abilities will be a list of abilities and weapons.
+        '''
+        self.abilities.append(weapon)
 
     def add_armor(self, armor):
         ''' Add ability to abilities list '''
@@ -130,6 +137,20 @@ class Weapon(Ability):
         print("Weapon damage",damage)
         return damage
 
+class Armor:
+    def __init__(self, name, max_block):
+        '''Instantiate name and defense strength.'''
+        self.name = name
+        self.max_block = max_block
+
+    def block(self):
+        '''
+        Return a random value between 0 and the
+        initialized max_block strength.
+        '''
+        defence = randint(0, self.max_block)
+        return defence
+
 class Team:
     def __init__(self, team_name):
         '''Instantiate resources.'''
@@ -155,7 +176,6 @@ class Team:
         '''Print out all heroes to the console.'''
         for hero in self.heroes:
             print("team member: ",hero.name)
-        pass
 
     def attack(self, other_team):
         '''
@@ -163,10 +183,34 @@ class Team:
 
         Hint: Use the fight method in the Hero class.
         '''
-        randomTeamHero = random.choice(self.heroes)
-        randomEnemyTeamHero = random.choice(other_team.heroes)
-        print("{} against {}".format(randomTeamHero.name, randomEnemyTeamHero.name))
+        # TODO: Fix, it doesn't work in 1V1
+        randomTeamHero = Hero(name="")
+        heroesHasAliveMembers = True
+        randomTeamEnemy = Hero(name="")
+        villainsHaveAliveMembers = True
+        canFight = True
+        while canFight == True:
+            for hero in self.heroes:
+                if hero.is_alive() == True:
+                    randomTeamHero = hero
+                    heroesHasAliveMembers = True
+                else:
+                    heroesHasAliveMembers = False
+            for villain in other_team.heroes:
+                if villain.is_alive() == True:
+                    randomTeamEnemy = villain
+                    villainsHaveAliveMembers = True
 
+                else:
+                    villainsHaveAliveMembers = False
+            if villainsHaveAliveMembers == False:
+                print("{} team has won!".format(self.name))
+                canFight = False
+            if heroesHasAliveMembers == False:
+                print("{} team has won!".format(other_team.name))
+                canFight = False
+            print("{} against {}".format(randomTeamHero.name, randomTeamEnemy.name))
+            randomTeamHero.fight(randomTeamEnemy)
         pass
 
     def revive_heroes(self, health=100):
@@ -174,6 +218,15 @@ class Team:
         This method should reset all heroes health to their
         original starting value.
         '''
+        for hero in self.heroes:
+            if health == 100:
+                print("{} is being revived. His health is going back to: {}".format(hero.name, hero.starting_health))
+                hero.current_health = hero.starting_health
+            else:
+                print("{} is being revived. His health is going to: {}".format(hero.name, health))
+                hero.current_health = health
+
+
         pass
 
     def stats(self):
@@ -182,36 +235,155 @@ class Team:
 
         This data must be output to the console.
         '''
+        for hero in self.heroes:
+            print("{}   Deaths: {}    Kills: {}".format(hero.name, hero.deaths, hero.kills))
         pass
 
-class Armor:
-    def __init__(self, name, max_block):
-        '''Instantiate name and defense strength.'''
-        self.name = name
-        self.max_block = max_block
+class Arena:
+    def __init__(self):
+        '''
+        Declare variables
+        '''
+        teamOne = input("Name of first team: ")
+        teamTwo = input("Name of second team: ")
+        # TODO: Need to add more verifying of input
+        if teamOne is not None and teamTwo is not None:
+            self.team_one = Team(str(teamOne))
+            self.team_two = Team(str(teamTwo))
+            print("{} vs {}".format(self.team_one.name, self.team_two.name))
+    def create_ability(self):
+        '''
+        This method will allow a user to create an ability.
 
-    def block(self):
+        Prompt the user for the necessary information to create a new ability object.
+
+        return the new ability object.
         '''
-        Return a random value between 0 and the
-        initialized max_block strength.
+        abilityInputName = input("Name of ability: ")
+        abilityInputDamage = input("{}'s damage: ".format(abilityInputName))
+
+        ability = Ability(name=abilityInputName, attackStrenght=int(abilityInputDamage))
+        print("Your new ability: [name: {}    damage: {}]".format(ability.name, ability.attackStrenght))
+        return ability
+
+    def create_weapon(self):
         '''
-        defence = randint(0, self.max_block)
-        return defence
+        This method will allow a user to create a weapon.
+
+        Prompt the user for the necessary information to create a new weapon object.
+
+        return the new weapon object.
+        '''
+        weaponInputName = input("Name of weapon: ")
+        weaponInputDamage = input("{}'s damage: ".format(weaponInputName))
+
+        weapon = Weapon(name=weaponInputName, attackStrenght=int(weaponInputDamage))
+        print("Your new weapon: [name: {}    damage: {}]".format(weapon.name, weapon.attackStrenght))
+        return weapon
+
+    def create_armor(self):
+        '''
+        This method will allow a user to create a piece of armor.
+
+        Prompt the user for the necessary information to create a new armor object.
+
+        return the new armor object.
+        '''
+        armorInputName = input("Name of armor: ")
+        armorInputDamage = input("{}'s damage: ".format(armorInputName))
+
+        armor = Armor(name=armorInputName, max_block=int(armorInputDamage))
+        print("Your new armor: [name: {}    damage: {}]".format(armor.name, armor.max_block))
+        return armor
+
+
+    def create_hero(self):
+        '''
+        This method should allow a user to create a hero.
+
+        User should be able to specify if they want armors, weapons, and abilites. Call the methods you made above and use the return values to build your hero.
+
+        return the new hero object
+        '''
+        heroName = input("Name of hero: ")
+        heroHealth = int(input("{}'s health: ".format(heroName)))
+        hero = Hero(name=heroName, starting_health=heroHealth)
+
+        addPower = ""
+        while addPower != 0:
+            addPower = input("(W) if you want to add a weapon\n(A) if you want to add an ability\n(D) if you want to add armor\n(Anything else) if you want to finish hero: ")
+            addPower = str(addPower).upper()
+            if addPower == "W":
+                hero.add_weapon(self.create_weapon())
+                print("Added weapon to hero")
+            elif addPower == "A":
+                hero.add_ability(self.create_ability())
+                print("Added ability to hero")
+            elif addPower == "D":
+                hero.add_armor(self.create_armor())
+                print("Added armor to hero")
+            else:
+                print("Finished making hero")
+                addPower = 0
+        return hero
+
+    def build_team_one(self):
+        '''
+        This method should allow a user to create team one.
+        Prompt the user for the number of Heroes on team one and
+        call self.create_hero() for every hero that the user wants to add to team one.
+
+        Add the created hero to team one.
+        '''
+        teamMembers = input("Number of members for {} team: ".format(self.team_one.name))
+        teamMembers = int(teamMembers)
+        while teamMembers != 0:
+            print("Team members left to create: ", teamMembers)
+            self.team_one.add_hero(self.create_hero())
+            teamMembers -= 1
+            self.team_one.view_all_heroes()
+
+    def build_team_two(self):
+        '''
+        This method should allow a user to create team two.
+        Prompt the user for the number of Heroes on team two and
+        call self.create_hero() for every hero that the user wants to add to team two.
+
+        Add the created hero to team two.
+        '''
+        teamMembers = input("Number of members for {} team: ".format(self.team_two.name))
+        teamMembers = int(teamMembers)
+        while teamMembers != 0:
+            print("Team members left to create: ", teamMembers)
+            self.team_two.add_hero(self.create_hero())
+            teamMembers -= 1
+            self.team_two.view_all_heroes()
+
+    def team_battle(self):
+        '''
+        This method should battle the teams together.
+        Call the attack method that exists in your team objects to do that battle functionality.
+        '''
+        self.team_one.attack(other_team=self.team_two)
+
+
+    def show_stats(self):
+        '''
+        This method should print out battle statistics
+        including each team's average kill/death ratio.
+
+        Required Stats:
+        Declare winning team
+        Show both teams average kill/death ratio.
+        Show surviving heroes.
+        '''
 
 if __name__ == "__main__":
-    batman = Hero("Batman")
-    # batsuit = Armor("Bat Suit", 1)
-    # batman.add_armor(batsuit)
-
-
-
-    superman = Hero("Superman")
-    # superStreanght = Ability("Super Streanght", 100)
-    # superman.add_ability(superStreanght)
-
-    justiceLeague = Team("League")
-    evilLeague = Team("Evil League")
-
-    justiceLeague.add_hero(batman)
-    evilLeague.add_hero(superman)
-    justiceLeague.attack(evilLeague)
+    arena = Arena()
+    # # arena.create_weapon()
+    # # arena.create_ability()
+    # # arena.create_armor()
+    arena.build_team_one()
+    arena.build_team_two()
+    if len(arena.team_one.heroes) > 0 and len(arena.team_two.heroes) > 0:
+        arena.team_battle()
