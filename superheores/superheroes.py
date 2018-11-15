@@ -377,6 +377,38 @@ class Arena:
         Show both teams average kill/death ratio.
         Show surviving heroes.
         '''
+        numberOfKills_team_one = list()
+        numberOfKills_team_two = list()
+
+        numberOfDeaths_team_one = list()
+        numberOfDeaths_team_two = list()
+
+        team_one_alive_heores = list()
+        team_two_alive_heroes = list()
+
+        for hero in self.team_one.heroes:
+            if hero.is_alive() == True:
+                team_one_alive_heores.append(hero)
+            numberOfKills_team_one.append(hero.kills)
+            numberOfDeaths_team_one.append(hero.deaths)
+        for villain in self.team_two.heroes:
+            if villain.is_alive() == True:
+                team_two_alive_heores.append(villain)
+            numberOfKills_team_two.append(villain.kills)
+            numberOfDeaths_team_two.append(villain.deaths)
+
+        team_one_averageDeaths = sum(numberOfDeaths_team_one) / float(len(numberOfDeaths_team_one))
+        team_two_averageDeaths = sum(numberOfDeaths_team_two) / float(len(numberOfDeaths_team_two))
+
+        team_one_averageKills = sum(numberOfKills_team_one) / float(len(numberOfKills_team_one))
+        team_two_averageKills = sum(numberOfKills_team_two) / float(len(numberOfKills_team_two))
+
+        for i in team_one_alive_heores:
+            print("{}'s alive member: {}".format(self.team_one.name, i.name))
+        for i in team_two_alive_heores:
+            print("{}'s alive member: {}".format(self.team_two.name, i.name))
+
+        print("{}'s Kills: {}   Deaths: {}\n{}'s Kills:{}   Deaths: {}".format(self.team_one.name,team_one_averageKills, team_one_averageDeaths, self.team_two.name, team_two_averageKills, team_two_averageDeaths))
 
 if __name__ == "__main__":
     arena = Arena()
@@ -387,3 +419,4 @@ if __name__ == "__main__":
     arena.build_team_two()
     if len(arena.team_one.heroes) > 0 and len(arena.team_two.heroes) > 0:
         arena.team_battle()
+    arena.show_stats()
