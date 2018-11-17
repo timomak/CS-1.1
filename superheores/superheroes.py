@@ -1,6 +1,7 @@
 from random import randint
 import random
 
+
 class Hero:
     def __init__(self, name, starting_health=100):
         '''
