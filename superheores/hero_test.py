@@ -122,23 +122,3 @@ def test_armor_block():
     shield = superheroes.Armor("Shield", 5)
     block = shield.block()
     assert (-1 < block < 6)
-
-# # Test Arena
-#     # Need to learn how to test input
-# def test_arena_init():
-#     arena = superheroes.Arena()
-#
-#     arena.setattr('builtins.input', lambda x: "1")
-#     arena.setattr('builtins.input', lambda x: "2")
-#     # arena.input = lambda: '1'
-#     # arena.input = lambda: '2'
-#     assert arena.team_one.name == "1"
-#
-
-
-
-
-
-
-
-#  Space
