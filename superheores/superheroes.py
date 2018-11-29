@@ -200,7 +200,6 @@ class Team:
                 if villain.is_alive() == True:
                     randomTeamEnemy = villain
                     villainsHaveAliveMembers = True
-
                 else:
                     villainsHaveAliveMembers = False
             if villainsHaveAliveMembers == False:
@@ -210,7 +209,8 @@ class Team:
                 print("{} team has won!".format(other_team.name))
                 canFight = False
             print("{} against {}".format(randomTeamHero.name, randomTeamEnemy.name))
-            randomTeamHero.fight(randomTeamEnemy)
+            if canFight == True:
+                randomTeamHero.fight(randomTeamEnemy)
         pass
 
     def revive_heroes(self, health=100):
@@ -393,7 +393,7 @@ class Arena:
             numberOfDeaths_team_one.append(hero.deaths)
         for villain in self.team_two.heroes:
             if villain.is_alive() == True:
-                team_two_alive_heores.append(villain)
+                team_two_alive_heroes.append(villain)
             numberOfKills_team_two.append(villain.kills)
             numberOfDeaths_team_two.append(villain.deaths)
 
@@ -405,16 +405,13 @@ class Arena:
 
         for i in team_one_alive_heores:
             print("{}'s alive member: {}".format(self.team_one.name, i.name))
-        for i in team_two_alive_heores:
+        for i in team_two_alive_heroes:
             print("{}'s alive member: {}".format(self.team_two.name, i.name))
 
         print("{}'s Kills: {}   Deaths: {}\n{}'s Kills:{}   Deaths: {}".format(self.team_one.name,team_one_averageKills, team_one_averageDeaths, self.team_two.name, team_two_averageKills, team_two_averageDeaths))
 
 if __name__ == "__main__":
     arena = Arena()
-    # # arena.create_weapon()
-    # # arena.create_ability()
-    # # arena.create_armor()
     arena.build_team_one()
     arena.build_team_two()
     if len(arena.team_one.heroes) > 0 and len(arena.team_two.heroes) > 0:
